@@ -101,6 +101,51 @@ This network validation process applies some CI/CD principles to check device co
 - [Python](https://www.python.org/) — Programming language for network applications:  
   All test software is written in Python, including scripts that run tests that are not available in Batfish.
 
+## Tests
+
+There are two categories of tests performed on the lab configuration:
+
+- Parsing test
+- Batfish test
+
+### Parsing Tests
+
+Parsing tests are performed using simple parsing of configuration files to confirm the presence of specific lines of configuration. The tests are performed on all labs and they include:
+
+- SNMP configuration check: Confirms the presence of SNMP community strings, location, and contact lines.
+- SysLog configuration check: Confirms the presence of SysLog server line.
+- Clock configuration check: Confirms the present of time zone settings.
+
+The test fail if any of these individual tests fail.
+
+
+### Batfish Tests
+
+Batfish is a network configuration analysis tool that guarantees validity and correctness of network configuration by building a model of network behavior based on device configurations.
+
+Batfish is used to perform simple tests on lab configuration files. These tests differ depending on the lab assignment.
+
+**Labs 1 to 4 checks**
+
+- Number of Routers: Check of there are five configuration files and each file represents a unique router (no duplicates)
+- Valid Configuration: Ensures that Batfish is able to recognize the vendor's configuration files.   
+- Clean Parsing: Checks if there are certain configuration lines that Batfish cannot understand or ignores.
+- Host Properties: Tests if the router's name, the domain name and NTP servers are configured as expected.
+- Undefined References: Tests if there are structures (such as ACL) that are used in the configuration but not defined.
+- Shut Interfaces: Tests if all unused interfaces are shutdown.
+
+Labs 1-4 checks fail if any of the above tests fail except the configuration and parsing tests. The check continues even if some configuration lines are not understood by Batfish.
+
+**Lab 5 checks**
+
+Lab 5 checks include all previous checks and three more:
+
+- Duplicate Router IDs: Checks there are no duplicate BGP router IDs.
+- BGP Compatibility: Checks that there are no incompatible BGP sessions present in the configuration.
+- BGP Unestablished: Checks if there BGP sessions that are compatible but not established.
+
+Lab 5 checks fail if any of the above tests fail.
+
 ## Installation
 
 ### Server Installation
@@ -153,7 +198,7 @@ Docker, Drone server and runner(s) need to be installed on a publicly accessible
 This part requires the installation for Batfish's Docker image and configuring the CI/CD pipeline.
 
 \<to be completed\>
- 
+
 ## Acknowledgments
 
 The development of this pipeline follows the examples and the tutorials included in:

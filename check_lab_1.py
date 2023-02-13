@@ -133,7 +133,6 @@ def main():
     test_host_properties(DOMAIN_NAME, routers, servers)
     test_undefined_references(init_snap)
     test_shut_interfaces()
-    test_undefined_references(init_snap)
     print("All checks passed!")
 
 
