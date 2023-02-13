@@ -4,19 +4,20 @@ This repository provides an automated process to checking the validity of networ
 
 To use this repository, each student group need to:
 
-1. Clone the main branch of this repository
-2. Create a branch named after their group
-3. Copy network device configuration to the branch
-4. Commit and push the branch
-5. Check if their configuration files have passed the checks
+1. Select one student to carry out the remaining tasks.
+2. Clone the main branch of this repository
+3. Create a branch named after their group
+4. Copy network device configuration to the branch
+5. Commit and push the branch
+6. Check if their configuration files have passed the checks
+
+Instructors and students need to have a GitHub account to be able to push lab configuration and view results. To eliminate redundant work, only one student from each lab group is needed to follow the steps below.
 
 Instructors will also be able to view the results and advise students on how to fix any errors.
 
 ## Instructions for students:
 
 Follow these instructions after completing all the lab required configuration steps:
-
-### Instructions for Lab 1
 
 1. Clone the main branch of this repository in the home directory:
    ```
@@ -50,7 +51,7 @@ Follow these instructions after completing all the lab required configuration st
    $ git commit -m "add config files for group g99"
    $ git push --set-upstream origin lab1_g99
    ```
-   Note: the last step may require a username/password
+   Note: the last step requires a username/password
 5. Check if your configuration files have passed the checks:
    - Go the github [repository](https://github.com/martimy/Design_Fall_2022)
    - click on 'barnches'   
@@ -61,22 +62,6 @@ Follow these instructions after completing all the lab required configuration st
 
    ![](img/checks.png)
 
-### Instructions for Labs 2 to 5
-
-The following steps assume you have followed the steps for Lab 1 previously.
-
-1. Change directory to Design_Fall_2022 and checkout the main branch:
-    ```
-    $ cd
-    $ cd Design_Fall_2022
-    $ git checkout main
-    ```
-2. Update the repository then create a branch named after your lab and group numbers (use the format labX_gYY, where X is the lab number and YY is your group number) and checkout the branch:
-   ```
-   $ git pull
-   $ git checkout -b lab2_g99
-   ```
-3. Follow same steps 3 to 5 above.
 
 ## Validation Process
 
