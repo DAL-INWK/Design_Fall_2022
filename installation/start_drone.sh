@@ -1,8 +1,8 @@
-CLIENT_ID=4dd929d30a77aaa699d0
-GITHUB_SECRET=2ed4b8e801e64c88057f81fe704b6316fe7a494f
-RPC_SECRET=88808d97d501e651b0bf148d61c2b89d
+CLIENT_ID=<number>
+GITHUB_SECRET=<number>
+RPC_SECRET=<number>
 # Address must be specified
-HOST="129.173.143.143"
+HOST=<IP address>
 
 docker run \
   --volume=/var/lib/drone:/data \

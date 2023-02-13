@@ -1,5 +1,5 @@
-RPC_SECRET=88808d97d501e651b0bf148d61c2b89d
-HOST="129.173.143.143"
+RPC_SECRET=<number>
+HOST=<IP Address>
 NAME="my-first-runner"
 
 docker run --detach \
