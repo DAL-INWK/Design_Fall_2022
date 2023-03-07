@@ -22,11 +22,11 @@ Follow these instructions after completing all lab configuration steps:
 1. Clone the main branch of this repository in the lab's VM home directory:
    ```
    $ cd
-   $ git clone --branch main https://github.com/martimy/Design_Fall_2022
+   $ git clone --branch main https://github.com/martimy/Network_Design
    ```
 2. Create a branch named after your lab and group numbers (use the format labX_gYY, where X is the lab number and YY is your group number) and checkout the branch:
    ```
-   $ cd Design_Fall_2022
+   $ cd Network_Design
    $ git checkout -b lab1_g99
    ```
 3. Copy network device configuration using Ansible:
@@ -53,7 +53,7 @@ Follow these instructions after completing all lab configuration steps:
    ```
    Note: the last step requires a username/password
 5. Check if your configuration files have passed the checks:
-   - Go the github [repository](https://github.com/martimy/Design_Fall_2022)
+   - Go the github [repository](https://github.com/martimy/Network_Design)
    - click on 'barnches'   
 
    ![](img/branches.png)
