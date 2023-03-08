@@ -6,7 +6,10 @@ Copyright 2022 Maen Artimy
 import os
 import pyparsing as pp
 import pandas as pd
+from rich.console import Console
 
+
+console = Console(color_system="truecolor")
 
 # This code verifies if a Cisco device configuration includes lines
 # similar to the following:
@@ -220,6 +223,7 @@ def test_snmp_properties(cfg_files):
     """
 
     # Ask SNMP questions
+    console.rule("[bold yellow]Checking SNMP configuration")
     snmp_parameters = SNMPValues(cfg_files).answer().frame()
 
     # check if all nodes are present
@@ -258,7 +262,8 @@ def test_logger_properties(cfg_files):
 
     log_parameters = LoggerValues(cfg_files).answer().frame()
 
-    # check if all nodes are present
+    # check Syslog configuration
+    console.rule("[bold yellow]Checking Syslog configuration")
     assert (
         len(log_parameters.index) == NUM
     ), f"Expecting {NUM} lines, \
@@ -294,7 +299,8 @@ def test_clock_properties(cfg_files):
 
     clk_parameters = ClockValues(cfg_files).answer().frame()
 
-    # check if all nodes are present
+    # check NTP configuration
+    console.rule("[bold yellow]Checking NTP configuration")
     assert (
         len(clk_parameters.index) == NUM
     ), f"Expecting {NUM} lines, \
@@ -318,9 +324,12 @@ if __name__ == "__main__":
         if os.path.isfile(os.path.join(PATH, path))
     ]
 
+    console.rule("[bold yellow]Checking presence of configuration files")
     assert files_list, "No configuration files"
 
     test_snmp_properties(files_list)
     test_logger_properties(files_list)
     test_clock_properties(files_list)
-    print("All checks passed!")
+    
+    console.rule("[bold green]:heavy_check_mark: All checks passed :heavy_check_mark:")
+
