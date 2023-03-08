@@ -36,6 +36,8 @@ Follow these instructions after completing all lab configuration steps:
    ```
    If the above process was successful (all routers report ok=1), then you will find a folder 'lab/configs' created in the repository. If the process failed, then it is likely that the SSH configuration on the network devices is not completed and you must follow the instructions in the lab assignment documents to configure SSH.
 4. Commit the changes and push the branch:
+   *Note: you will need a Github account to complete this step. You also need to be added as a collaborator the repository by the course instructor. When asked for username/password, enter your GitHub username and your token (instead of password). You can obtain an access token by following the instructions in this [link](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).*
+
    ```
    $ git add lab
    $ git status
@@ -51,7 +53,6 @@ Follow these instructions after completing all lab configuration steps:
    $ git commit -m "add config files for group g99"
    $ git push --set-upstream origin lab1_g99
    ```
-   Note: the last step requires a username/password
 5. Check if your configuration files have passed the checks:
    - Go the github [repository](https://github.com/martimy/Network_Design)
    - click on 'barnches'   
