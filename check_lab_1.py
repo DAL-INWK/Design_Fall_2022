@@ -13,7 +13,10 @@ from pybatfish.client.asserts import (
     assert_num_results,
     assert_zero_results,
 )
+from rich.console import Console
 
+
+console = Console(color_system="truecolor")
 
 # Get environment variables and constants
 BATFISH_SERVER = os.getenv("BATFISH_SERVER")
@@ -41,6 +44,7 @@ def test_num_routers(num):
     The test fails if the number of files is not equal to 'num'
     """
 
+    console.rule("[bold yellow]Checking number for routers")
     file_status = bfq.fileParseStatus().answer()
     assert_num_results(file_status, num, soft=False)
 
@@ -53,6 +57,7 @@ def test_init_issues():
     in the configuration due to lack of support for certain features.
     """
 
+    console.rule("[bold yellow]Checking parsing problems 1/2")
     inissue = bfq.initIssues().answer()
     assert_zero_results(inissue, soft=True)
 
@@ -63,6 +68,8 @@ def test_clean_parsing():
 
     The test fails if the returned status is not 'PASSED'
     """
+    
+    console.rule("[bold yellow]Checking parsing problems 2/2")
     file_status = bfq.fileParseStatus().answer().frame()
     status_violations = file_status[file_status["Status"] != "PASSED"]
     assert_zero_results(status_violations, soft=False)
@@ -75,6 +82,7 @@ def test_host_properties(domain, hosts, ntp_servers):
     Test fails if any device property does not match requirements
     """
 
+    console.rule("[bold yellow]Checking host properties")
     node_props = (
         bfq.nodeProperties(nodes="", properties="Hostname, Domain_Name, NTP_Servers")
         .answer()
@@ -103,6 +111,7 @@ def test_shut_interfaces():
     Test fails if ports 2 or 3 are active
     """
 
+    console.rule("[bold yellow]Checking shut interfaces")
     violators = bfq.interfaceProperties(
         interfaces="/GigabitEthernet[23]/",
         properties="Active",
@@ -116,6 +125,8 @@ def test_undefined_references(snap):
     Test for references to undefined structures
 
     """
+    
+    console.rule("[bold yellow]Checking undefined references")
     assert_no_undefined_references(snapshot=snap, soft=False)
 
 
@@ -133,8 +144,8 @@ def main():
     test_host_properties(DOMAIN_NAME, routers, servers)
     test_undefined_references(init_snap)
     test_shut_interfaces()
-    print("All checks passed!")
 
+    console.rule("[bold green]:heavy_check_mark: All checks passed :heavy_check_mark:")
 
 if __name__ == "__main__":
     main()
