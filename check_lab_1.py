@@ -14,9 +14,11 @@ from pybatfish.client.asserts import (
     assert_zero_results,
 )
 from rich.console import Console
-
-
 console = Console(color_system="truecolor")
+
+import logging
+logging.getLogger("pybatfish").setLevel(logging.ERROR)
+
 
 # Get environment variables and constants
 BATFISH_SERVER = os.getenv("BATFISH_SERVER")
