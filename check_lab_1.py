@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created by Maen Artimy, Nov 2022
+Created by Maen Artimy, 2022 - 2023
 """
 
 import os
+import sys
 import pandas as pd
 from pybatfish.client.commands import bf_session, bf_set_network, bf_init_snapshot
 from pybatfish.question import load_questions
@@ -150,4 +151,9 @@ def main():
     console.rule("[bold green]:heavy_check_mark: All checks passed :heavy_check_mark:")
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        console.rule("[bold red]:X: Checks Failed :X:")
+        console.print(f"[bold red]{e}")
+        sys.exit(1)
