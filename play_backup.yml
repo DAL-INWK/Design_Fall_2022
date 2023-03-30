@@ -12,8 +12,11 @@
     - name: Backup current switch config (ios)
       ios_config:
         backup: yes
+<<<<<<< HEAD
         backup_options:
           filename: "{{ inventory_hostname}}.cfg"
           dir_path: lab/configs
+=======
+>>>>>>> 8668186... lab2 g16
       register: backup_ios_location
       when: ansible_network_os == 'ios'

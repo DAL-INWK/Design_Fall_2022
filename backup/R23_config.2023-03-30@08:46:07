@@ -1,0 +1,199 @@
+Building configuration...
+
+Current configuration : 2489 bytes
+!
+! Last configuration change at 08:45:41 ADT Thu Mar 30 2023 by student
+! NVRAM config last updated at 08:45:48 ADT Thu Mar 30 2023 by student
+!
+version 16.5
+service timestamps debug datetime msec
+service timestamps log datetime localtime
+platform qfp utilization monitor load 80
+no platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname R23
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+clock timezone AST -4 0
+clock summer-time ADT recurring
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+no ip domain lookup
+ip domain name inwk.local
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+! 
+! 
+! 
+! 
+!
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+license udi pid CSR1000V sn 9A3YDCTB8KD
+diagnostic bootup level minimal
+!
+spanning-tree extend system-id
+!
+!
+username student privilege 15 secret 5 $1$OmgA$9c7DD3GAG8ykgk6C3bG8R/
+!
+redundancy
+!
+!
+!
+!
+!
+lldp run
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+! 
+! 
+!
+!
+interface Loopback0
+ description ROUTER ID
+ ip address 10.0.0.23 255.255.255.255
+!
+interface GigabitEthernet1
+ no ip address
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet1.13
+ description To R11
+ encapsulation dot1Q 13
+ ip address 10.1.13.2 255.255.255.0
+!
+interface GigabitEthernet1.23
+ description To R12
+ encapsulation dot1Q 23
+ ip address 10.1.23.2 255.255.255.0
+!
+interface GigabitEthernet1.155
+ encapsulation dot1Q 155
+ ip address 10.1.155.23 255.255.255.0
+!
+interface GigabitEthernet1.301
+ description To H31
+ encapsulation dot1Q 301
+ ip address 192.168.31.1 255.255.255.0
+!
+interface GigabitEthernet1.302
+ description To H32
+ encapsulation dot1Q 302
+ ip address 192.168.32.1 255.255.255.0
+!
+interface GigabitEthernet2
+ no ip address
+ shutdown
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet3
+ no ip address
+ shutdown
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+
+threat-visibility
+!
+virtual-service csr_mgmt
+!
+ip forward-protocol nd
+ip http server
+ip http authentication local
+ip http secure-server
+!
+ip ssh version 2
+ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+!
+logging host 10.1.155.100
+!
+!
+snmp-server community dcread RO
+snmp-server community dcwrite RW
+snmp-server location Data Centre
+snmp-server contact admin@inwk.local
+!
+!
+control-plane
+!
+ !
+ !
+ !
+ !
+!
+!
+!
+!
+!
+line con 0
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ login local
+ transport input ssh
+!
+ntp server 10.1.155.100
+!
+!
+!
+!
+!
+end

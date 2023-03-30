@@ -1,0 +1,243 @@
+---
+- name: Create Basic Router Configuration for INWK6912 LAB 1
+  hosts: routers
+  connection: network_cli
+  gather_facts: no
+
+  vars:
+    mgm: 10.1.155.100
+
+    snmp:
+      read: dcread
+      write: dcwrite
+      contact: admin@inwk.local
+      location: Data Centre
+
+    routers:
+      R11:
+        loopback:
+          id: Loopback0
+          description: ROUTER ID
+          ip:
+            address: 10.0.0.11
+            mask: 255.255.255.255
+        interfaces:
+          - id: GigabitEthernet1.11
+            vlan: 11
+            description: To R21
+            ip:
+              address: 10.1.11.1
+              mask: 255.255.255.0
+          - id: GigabitEthernet1.12
+            vlan: 12
+            description: To R22
+            ip:
+              address: 10.1.12.1
+              mask: 255.255.255.0
+          - id: GigabitEthernet1.13
+            vlan: 13
+            description: To R23
+            ip:
+              address: 10.1.13.1
+              mask: 255.255.255.0
+      R12:
+        loopback:
+          id: Loopback0
+          description: ROUTER ID
+          ip:
+            address: 10.0.0.12
+            mask: 255.255.255.255
+        interfaces:
+          - id: GigabitEthernet1.21
+            vlan: 21
+            description: To R21
+            ip:
+              address: 10.1.21.1
+              mask: 255.255.255.0
+          - id: GigabitEthernet1.22
+            vlan: 22
+            description: To R22
+            ip:
+              address: 10.1.22.1
+              mask: 255.255.255.0
+          - id: GigabitEthernet1.23
+            vlan: 23
+            description: To R23
+            ip:
+              address: 10.1.23.1
+              mask: 255.255.255.0
+      R21:
+        loopback:
+          id: Loopback0
+          description: ROUTER ID
+          ip:
+            address: 10.0.0.21
+            mask: 255.255.255.255
+        interfaces:
+          - id: GigabitEthernet1.11
+            vlan: 11
+            description: To R11
+            ip:
+              address: 10.1.11.2
+              mask: 255.255.255.0
+          - id: GigabitEthernet1.21
+            vlan: 21
+            description: To R12
+            ip:
+              address: 10.1.21.2
+              mask: 255.255.255.0
+          - id: GigabitEthernet1.101
+            vlan: 101
+            description: To H11
+            ip:
+              address: 192.168.11.1
+              mask: 255.255.255.0
+          - id: GigabitEthernet1.102
+            vlan: 102
+            description: To H12
+            ip:
+              address: 192.168.12.1
+              mask: 255.255.255.0
+      R22:
+        loopback:
+          id: Loopback0
+          description: ROUTER ID
+          ip:
+            address: 10.0.0.22
+            mask: 255.255.255.255
+        interfaces:
+          - id: GigabitEthernet1.12
+            vlan: 12
+            description: To R11
+            ip:
+              address: 10.1.12.2
+              mask: 255.255.255.0
+          - id: GigabitEthernet1.22
+            vlan: 22
+            description: To R12
+            ip:
+              address: 10.1.22.2
+              mask: 255.255.255.0
+          - id: GigabitEthernet1.201
+            vlan: 201
+            description: To H21
+            ip:
+              address: 192.168.21.1
+              mask: 255.255.255.0
+          - id: GigabitEthernet1.202
+            vlan: 202
+            description: To H22
+            ip:
+              address: 192.168.22.1
+              mask: 255.255.255.0
+      R23:
+        loopback:
+          id: Loopback0
+          description: ROUTER ID
+          ip:
+            address: 10.0.0.23
+            mask: 255.255.255.255
+        interfaces:
+          - id: GigabitEthernet1.13
+            vlan: 13
+            description: To R11
+            ip:
+              address: 10.1.13.2
+              mask: 255.255.255.0
+          - id: GigabitEthernet1.23
+            vlan: 23
+            description: To R12
+            ip:
+              address: 10.1.23.2
+              mask: 255.255.255.0
+          - id: GigabitEthernet1.301
+            vlan: 301
+            description: To H31
+            ip:
+              address: 192.168.31.1
+              mask: 255.255.255.0
+          - id: GigabitEthernet1.302
+            vlan: 302
+            description: To H32
+            ip:
+              address: 192.168.32.1
+              mask: 255.255.255.0
+
+  tasks:
+
+    - name: Create top level configuration
+      ios_config:
+        lines:
+          - hostname {{ inventory_hostname }}
+          - no ip domain lookup
+          - ip domain name inwk.local
+          #- username student privilege 15 secret Meilab123
+
+    - name: Configure Loopback interface settings
+      ios_config:
+        parents: "interface {{ routers[ inventory_hostname ].loopback.id }}"
+        lines:
+          - "description {{ routers[ inventory_hostname ].loopback.description }}"
+          - "ip address {{ routers[ inventory_hostname ].loopback.ip.address }} {{ routers[ inventory_hostname ].loopback.ip.mask}}"
+
+    - name: Configure spine-leaf interface settings
+      ios_config:
+        parents: "interface {{ item.id }}"
+        lines:
+          - "description {{ item.description }}"
+          - "encapsulation dot1Q {{ item.vlan }}"
+          - "ip address {{ item.ip.address }} {{ item.ip.mask}}"
+      with_items: "{{ routers[ inventory_hostname ].interfaces }}"
+
+    - name: Shutdown unused interfaces
+      ios_config:
+        parents: "interface {{ item }}"
+        lines:
+          - shutdown
+        match: line
+        before: "default interface {{ item }}"
+      with_items:
+        - GigabitEthernet2
+        - GigabitEthernet3
+
+    - name: Enable SSH access
+      ios_config:
+        parents: line vty 0 4
+        lines:
+          - login local
+          - transport input ssh
+
+    - name: Sync console output
+      ios_config:
+        parents: line con 0
+        lines:
+          - logging synchronous
+
+    - name: Enable SNMP
+      ios_config:
+        lines:
+          - "snmp-server community {{ snmp.read }} RO"
+          - "snmp-server community {{ snmp.write }} RW"
+          - "snmp-server location {{ snmp.location }}"
+          - "snmp-server contact {{ snmp.contact }}"
+
+    - name: Enable NTP
+      ios_config:
+        lines:
+          - clock timezone AST -4 0
+          - clock summer-time ADT recurring
+          - "ntp server {{ mgm }}"
+
+    - name: Enable Syslog
+      ios_config:
+        lines:
+          - service timestamps log datetime localtime
+          - "logging host {{ mgm }}"
+
+    - name: Enable LLDP
+      ios_config:
+        lines: lldp run
+
+    - name: Save running to startup when modified
+      ios_config:
+        save_when: modified
