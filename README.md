@@ -198,18 +198,46 @@ Docker, Drone server and runner(s) need to be installed on a publicly accessible
 
 7. Activate a Repository
 
-Direct your web browser to the server IP address. Log into the Drone server and activate the required repository (this one, for example).
+    Direct your web browser to the server IP address. Log into the Drone server and activate the required repository (this one, for example).
+
 
 8. Edit Settings (optional)
 
     In the repository Settings, add any secrets needed in your test scripts (e.g. Batfish server location)
-    
+
+
+9. Install Batfish
+
+    Batfish is required to perform configuration tests. It can be installed on the same server as Drone or on another server accessible from the Drone Server.
+
+    ```
+    $ docker pull batfish/allinone
+    $ docker run --name batfish -v batfish-data:/data -p 8888:8888 -p 9997:9997 -p 9996:9996 batfish/allinone
+    ```
 
 ### Pipeline installation and configuration
 
 This part requires the installation for Batfish's Docker image and configuring the CI/CD pipeline.
 
 \<to be completed\>
+
+**The .drone.yml file description:**
+
+The .drone.yml file defines a pipeline that will run a series of checks on different labs based on their branch name.
+
+Here is a breakdown of the different components of the file:
+
+- `kind: pipeline`: Specifies that this is a pipeline definition.
+- `type: docker`: Specifies the pipeline type as Docker.
+- `name: Design Labs Configuration Check`: Assigns a name to the pipeline.
+- `steps`: Specifies the individual steps of the pipeline, which are the tasks that will be executed in sequence.
+- `name`: Assigns a name to the first step, which is `Lab Parser Check`.
+- `image`: Specifies the Docker image that will be used for this step. In this case, it is `martimy/netauto:0.2`.
+- `commands`: Specifies the command that will be executed in the Docker container. In this case, it is `python parser_check.py`.
+- `when`: Specifies the conditions under which this step should be executed. In this case, it will only run when the branch name matches the regular expression `lab?_*`.
+- The second and third steps (`Lab 1-4 Batfish Analysis` and `Lab 5 Batfish Analysis`) are similar to the first step, except that they run different Python scripts and are triggered by different branch names.
+- `trigger`: Specifies the conditions under which the pipeline should be triggered. In this case, it will be triggered when the branch name matches the regular expression `lab?_*`.
+
 
 ## Acknowledgments
 
