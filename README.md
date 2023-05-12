@@ -6,7 +6,7 @@ This document consists of the following sections:
 
 - Verification Tests: Provides information about the tests performed by the pipeline.
 - Usage Instructions: Provides usage instructions to students (this applies only to a specific course. General audience can use this section as a guideline only.)
-- Verification Process: Provides information about the tools used in the CI/CD pipeline
+- Verification Components: Provides information about the tools used in the CI/CD pipeline
 - Software Installation: Provides instructions on how to install the software tools used in the repository.
 - Acknowledgments: Lists the references and inspirations for this work.
 
@@ -115,7 +115,7 @@ Follow these instructions after completing all lab configuration steps:
 6. If there are any error, modify your configuration files and repeat the steps 3 to 5
 
 
-## Verification Process
+## Verification Components
 
 This configuration verification process applies some CI/CD principles to check device configuration against some common configuration errors. The pipeline includes the following components:
 
