@@ -1,30 +1,80 @@
-# Automated Network Validation
+# Automated Network Verification
 
-This repository provides an automated process to checking the validity of network configuration files generated during lab sessions.
+This repository provides an automated process to checking the correctness of network configuration files generated during lab sessions.
 
-To use this repository, each student group need to:
+This document consists of the following sections:
 
-1. Select one student to carry out the remaining tasks
-2. Clone the main branch of this repository
-3. Create a branch named after their group
-4. Copy network device configuration to the branch
-5. Commit and push the branch
-6. Check if their configuration files have passed the tests
+- Verification Tests: Provides information about the tests performed by the pipeline.
+- Usage Instructions: Provides usage instructions to students (this applies only to a specific course. General audience can use this section as a guideline only.)
+- Verification Process: Provides information about the tools used in the CI/CD pipeline
+- Software Installation: Provides instructions on how to install the software tools used in the repository.
+- Acknowledgments: Lists the references and inspirations for this work.
+
+## Verification Tests
+
+There are two categories of verification tests performed on the lab configuration:
+
+### Parsing tests
+
+Parsing tests are performed using simple parsing of configuration files to confirm the presence of specific lines of configuration. The tests are performed on all labs and they include:
+
+- SNMP configuration check: Confirms the presence of SNMP community strings, location, and contact lines.
+- SysLog configuration check: Confirms the presence of SysLog server line.
+- Clock configuration check: Confirms the present of time zone settings.
+
+The parsing test fail if any of these individual tests fail.
+
+
+### Configuration tests
+
+Batfish is a network configuration analysis tool that guarantees the correctness of a network's configuration file by building a model of the network's behavior based on device configurations.
+
+Batfish is used to perform simple tests on lab configuration files. These tests differ depending on the lab assignment.
+
+**Labs 1 to 4 tests:**
+
+- Number of Routers: Check of there are five configuration files and each file represents a unique router (no duplicates)
+- Valid Configuration: Ensures that Batfish is able to recognize the vendor's configuration files.   
+- Clean Parsing: Checks if there are certain configuration lines that Batfish cannot understand or ignores.
+- Host Properties: Tests if the router's name, the domain name and NTP servers are configured as expected.
+- Undefined References: Tests if there are structures (such as ACL) that are used in the configuration but not defined.
+- Shut Interfaces: Tests if all unused interfaces are shutdown.
+
+Labs 1-4 configuring test fails if any of the above tests fail except the configuration and parsing tests. The test continues even if some configuration lines are not understood by Batfish.
+
+**Lab 5 tests:**
+
+Lab 5 checks include all previous checks and three more:
+
+- Duplicate Router IDs: Checks there are no duplicate BGP router IDs.
+- BGP Compatibility: Checks that there are no incompatible BGP sessions present in the configuration.
+- BGP Unestablished: Checks if there BGP sessions that are compatible but not established.
+
+Lab 5 configuration test fails if any of the above tests fail.
+
+
+## Usage Instructions
 
 Instructors and students need a GitHub account to be able to push lab configuration and view results. To eliminate redundant work, only one student from each lab group is needed to follow the steps below.
 
-Instructors will also be able to view the results and advise students on how to fix any errors.
+### Pre-lab instructions for students
 
-## Instructions for Students:
+To use this repository, each student group need to do the following:
 
-Follow these instructions after completing all lab configuration steps:
-
-1. Clone the main branch of this repository in the lab's VM home directory:
+1. Select one student to carry out the remaining tasks
+2. Clone the main branch of this repository in the lab's VM home directory:
    ```
    $ cd
    $ git clone --branch main https://github.com/martimy/Network_Design
    ```
-2. Create a branch named after your lab and group numbers (use the format labX_gYY, where X is the lab number and YY is your group number) and checkout the branch:
+
+Instructors will also be able to view the results and advise students on how to fix any errors.
+
+### Post-lab instructions for students:
+
+Follow these instructions after completing all lab configuration steps:
+
+1. Create a branch named after your lab and group numbers (use the format labX_gYY, where X is the lab number and YY is your group number) and checkout the branch:
    ```
    $ cd Network_Design
    $ git checkout -b lab1_g99
@@ -62,61 +112,19 @@ Follow these instructions after completing all lab configuration steps:
    - Verify that you have a green checkmark in front of your branch. You can click on the checkmark to find details.
 
    ![](img/checks.png)
+6. If there are any error, modify your configuration files and repeat the steps 3 to 5
 
 
-## Validation Tests
+## Verification Process
 
-There are two categories of validation tests performed on the lab configuration:
-
-### Parsing tests
-
-Parsing tests are performed using simple parsing of configuration files to confirm the presence of specific lines of configuration. The tests are performed on all labs and they include:
-
-- SNMP configuration check: Confirms the presence of SNMP community strings, location, and contact lines.
-- SysLog configuration check: Confirms the presence of SysLog server line.
-- Clock configuration check: Confirms the present of time zone settings.
-
-The parsing test fail if any of these individual tests fail.
-
-
-### Configuration tests
-
-Batfish is a network configuration analysis tool that guarantees validity and correctness of a network's configuration by building a model of the network's behavior based on device configurations.
-
-Batfish is used to perform simple tests on lab configuration files. These tests differ depending on the lab assignment.
-
-**Labs 1 to 4 tests:**
-
-- Number of Routers: Check of there are five configuration files and each file represents a unique router (no duplicates)
-- Valid Configuration: Ensures that Batfish is able to recognize the vendor's configuration files.   
-- Clean Parsing: Checks if there are certain configuration lines that Batfish cannot understand or ignores.
-- Host Properties: Tests if the router's name, the domain name and NTP servers are configured as expected.
-- Undefined References: Tests if there are structures (such as ACL) that are used in the configuration but not defined.
-- Shut Interfaces: Tests if all unused interfaces are shutdown.
-
-Labs 1-4 configuring test fails if any of the above tests fail except the configuration and parsing tests. The test continues even if some configuration lines are not understood by Batfish.
-
-**Lab 5 tests:**
-
-Lab 5 checks include all previous checks and three more:
-
-- Duplicate Router IDs: Checks there are no duplicate BGP router IDs.
-- BGP Compatibility: Checks that there are no incompatible BGP sessions present in the configuration.
-- BGP Unestablished: Checks if there BGP sessions that are compatible but not established.
-
-Lab 5 configuration test fails if any of the above tests fail.
-
-
-## Validation Process
-
-This network validation process applies some CI/CD principles to check device configuration against some common configuration errors. The pipeline includes the following components:
+This configuration verification process applies some CI/CD principles to check device configuration against some common configuration errors. The pipeline includes the following components:
 
 ![Pipeline](img/pipeline.png)
 
 - [Ansible](https://www.ansible.com/) — Network automation tool (based on Python):  
   Ansible is used to automate the configuration of network devices as well at retrieve the configuration files in preparation for the configuration check.
 - [Batfish](https://www.batfish.org/) — Network configuration analysis tool (based in Python):  
-  Batfish performs vendor-independent validation of network configuration by answering several questions and comparing answers with expected results.   
+  Batfish performs vendor-independent verification of network configuration by answering several questions and comparing answers with expected results.   
 - [Docker](https://www.docker.com/) — Platform for building, deploying, and managing containerized applications:  
   Docker runs several containers in the pipeline, including: Drone Server, Drone Runner, Batfish, and martimy/netauto.
 - [Drone](https://www.drone.io/) — Continuous integration platform:  
@@ -133,7 +141,7 @@ This network validation process applies some CI/CD principles to check device co
 
 ## Software Installation
 
-In order to run the network validation process, you need to install the software components on a server that is reachable form the GitHub repository. This section will guide you through the steps of installing Docker, Drone server and runner, and Batfish on a Ubuntu Linux server. It also provides instructions on how to configure the CI/CD pipeline and activate the repository for testing.
+In order to run the configuration verification process, you need to install the software components on a server that is reachable form the GitHub repository. This section will guide you through the steps of installing Docker, Drone server and runner, and Batfish on a Ubuntu Linux server. It also provides instructions on how to configure the CI/CD pipeline and activate the repository for testing.
 
 ### Server installation
 
