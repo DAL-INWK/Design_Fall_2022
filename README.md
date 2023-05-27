@@ -65,7 +65,7 @@ To use this repository, each student group need to do the following:
 2. Clone the main branch of this repository in the lab's VM home directory:
    ```
    $ cd
-   $ git clone --branch main https://github.com/martimy/Network_Design
+   $ git clone --branch main https://github.com/martimy/Network_Verification
    ```
 
 Instructors will also be able to view the results and advise students on how to fix any errors.
@@ -76,7 +76,7 @@ Follow these instructions after completing all lab configuration steps:
 
 1. Create a branch named after your lab and group numbers (use the format labX_gYY, where X is the lab number and YY is your group number) and checkout the branch:
    ```
-   $ cd Network_Design
+   $ cd Network_Verification
    $ git checkout -b lab1_g99
    ```
 3. Copy network device configuration using Ansible:
@@ -104,7 +104,7 @@ Follow these instructions after completing all lab configuration steps:
    $ git push --set-upstream origin lab1_g99
    ```
 5. Check if your configuration files have passed the checks:
-   - Go the github [repository](https://github.com/martimy/Network_Design)
+   - Go the github [repository](https://github.com/martimy/Network_Verification)
    - click on 'barnches'   
 
    ![](img/branches.png)
@@ -182,16 +182,16 @@ Docker, Drone server and runner(s) need to be installed on a publicly accessible
     ```
 
 
-    At the Drone server host, edit the start_drone.sh script (in this repository) to include the following information: 
+    At the Drone server host, edit the start_drone.sh script (in this repository) to include the following information:
 
-    - Client ID and Secret (from step 2) 
-    - Runner secret (from step 3) 
-    - Host IP address 
+    - Client ID and Secret (from step 2)
+    - Runner secret (from step 3)
+    - Host IP address
     - Admin username (optional)
 
-    Also, edit the start_runner.sh script to include: 
+    Also, edit the start_runner.sh script to include:
 
-    - Runner secret 
+    - Runner secret
     - Host IP address
 
 
